@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .stopwatch {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #display {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .controls button {
+      font-size: 1rem;
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .start {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .pause {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .reset {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .controls button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="stopwatch">
+    <div id="display">00:00:000</div>
+    <div class="controls">
+      <button class="start" onclick="startTimer()">Start</button>
+      <button class="pause" onclick="pauseTimer()">Pause</button>
+      <button class="reset" onclick="resetTimer()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function updateDisplay() {
+      const time = Date.now() - startTime + elapsedTime;
+      const milliseconds = time % 1000;
+      const seconds = Math.floor(time / 1000) % 60;
+      const minutes = Math.floor(time / 60000);
+
+      document.getElementById("display").textContent =
+        `${pad(minutes)}:${pad(seconds)}:${pad(milliseconds, 3)}`;
+    }
+
+    function pad(num, size = 2) {
+      return num.toString().padStart(size, "0");
+    }
+
+    function startTimer() {
+      if (!timerInterval) {
+        startTime = Date.now();
+        timerInterval = setInterval(updateDisplay, 10);
+      }
+    }
+
+    function pauseTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        elapsedTime += Date.now() - startTime;
+        timerInterval = null;
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      startTime = 0;
+      elapsedTime = 0;
+      document.getElementById("display").textContent = "00:00:000";
+    }
+  </script>
+</body>
+</html>

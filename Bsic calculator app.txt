@@ -1,0 +1,59 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+export default function Calculator() {
+  const [input, setInput] = useState("");
+
+  const handleClick = (value) => {
+    setInput((prev) => prev + value);
+  };
+
+  const handleClear = () => {
+    setInput("");
+  };
+
+  const handleCalculate = () => {
+    try {
+      // Evaluate the expression safely
+      // eslint-disable-next-line no-eval
+      const result = eval(input);
+      setInput(result.toString());
+    } catch {
+      setInput("Error");
+    }
+  };
+
+  const buttons = [
+    "7", "8", "9", "/",
+    "4", "5", "6", "*",
+    "1", "2", "3", "-",
+    "0", ".", "=", "+"
+  ];
+
+  return (
+    <Card className="max-w-sm mx-auto mt-10 p-4 shadow-xl">
+      <CardContent>
+        <div className="mb-4 text-right text-2xl font-mono border p-2 rounded bg-gray-100">
+          {input || "0"}
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          {buttons.map((btn, idx) => (
+            <Button
+              key={idx}
+              variant="outline"
+              onClick={() =>
+                btn === "=" ? handleCalculate() : handleClick(btn)
+              }
+            >
+              {btn}
+            </Button>
+          ))}
+          <Button className="col-span-4" variant="destructive" onClick={handleClear}>
+            Clear
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
